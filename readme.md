@@ -5,6 +5,10 @@ Ejercicio realizado para mostrar un mapa actualizado de las personas afectadas p
 - Leaflet FullScreen
 - Leaflet Edgebuffer
 
+### Como Probarlo
+
+Puedes verlo [aquí](https://corona-sm-2019-app.netlify.com) o seguir la guía sobre **Como Utilizarlo**
+
 ### ¿Como Utilizarlo?
 
 Puedes bajarte el proyecto y ejecutarlo en un servidor web, si tienes NodeJS puedes instalar el paquete **live-server** y ejecutar el comando
