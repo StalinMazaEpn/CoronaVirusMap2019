@@ -1,94 +1,108 @@
-// import mapStyle from './mapStyle.js'
-var darkMode = false;
-let urlLayer;
-let darkLayer = 'https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png';
 let lightLayer = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 let darkIcon = '🌛';
 let lightIcon = '☀️';
+let filterDark = ['invert:100%'];
+let filterLight = [];
+let currentFilter = [];
 let btnIcon = lightIcon;
 let leafletAtribution = '&copy; <a href="https://www.openstreetmap.org/copyright">Gracias a OpenStreetMap</a>';
-let markersGroupLayer =  L.layerGroup();
 
-let darkLayerTile = L.tileLayer(darkLayer, {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    updateWhenIdle: true,
-    reuseTiles: true,
-    edgeBufferTiles: 2,
-    tileSize: 512, zoomOffset: -1
-});
-let lightLayerTile = L.tileLayer(lightLayer, {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-    updateWhenIdle: true,
-    reuseTiles: true,
-    edgeBufferTiles: 2,
-    tileSize: 512, zoomOffset: -1
-});
+//Funciones Manejar Temas
+const getThemeMode = () =>{
+    const mode = localStorage.getItem('sm-mode-theme');
+    console.log('get theme mode value', mode)
+    if(!mode){
+        return 'light'
+    }else{
+        return mode;
+    }
+}
+const setThemeMode = (mode) => {
+    localStorage.setItem('sm-mode-theme', mode);
+}
 
-let baseLayers = {
-    "Oscuro": darkLayerTile,
-    "Claro": lightLayerTile,
-};
-
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    // dark mode
-    urlLayer = darkLayer;
-    darkMode = true;
-} else {
-    urlLayer = lightLayer;
+const toggleThemeMode = () => {
+    const mode = getThemeMode();
+    if(mode == 'light'){
+        setThemeMode('dark');
+    }else{
+        setThemeMode('light');
+    }
 }
 
 
-// const $map = document.querySelector('#map');
+//Verificar Modo
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matchess) {
+    localStorage.setItem('sm-mode-theme', 'dark');
+}
+
+if(localStorage.getItem("sm-mode-theme") == null){
+    localStorage.setItem('sm-mode-theme', 'light');
+}
+
+
+currentFilter = (getThemeMode() == 'light') ? filterLight: filterDark;
+
+
+
+//Crear Mapa
 var map = L.map('map', {
     zoomAnimation: false,
     markerZoomAnimation: false,
     zoomControl: true,
-    fullscreenControl: true,
-    fullscreenControlOptions: {
-        position: 'topleft'
-    },
-    layers: [lightLayerTile]
 }).setView([0, 0], 3);
-L.tileLayer(urlLayer, {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+//Añadirle una capa
+let mapTileLayer = L.tileLayer.colorFilter(lightLayer, {
+    attribution: leafletAtribution,
     updateWhenIdle: true,
-    reuseTiles: true
+    reuseTiles: true,
+    filter: currentFilter,
 }).addTo(map);
 
 
+// Añadir boton FullScreen
+var fsControl = L.control.fullscreen();
+map.addControl(fsControl);
+// Manejar Eventos al Salir y entrar del modo pantalla completa
+// map.on('enterFullscreen', function(){
+//     if(window.console) window.console.log('enterFullscreen');
+// });
+// map.on('exitFullscreen', function(){
+//     if(window.console) window.console.log('exitFullscreen');
+// });
 
-// map.addControl(new L.Control.Fullscreen());
-//Añadir Boton Modo 
-// let btnThemeControl = L.control();
-// btnThemeControl.onAdd = function (map) {
-//     let container = L.DomUtil.create('input');
-//     container.type = "button";
-//     container.value = btnIcon;
-//     container.title = "No cat";
-//     container.onclick = function (event) {
-//         // alert('btn click')
-//         console.log('event.targe', event.target)
-//         if(darkMode){
-//             event.target.value = lightIcon;
-//             event.target.classList.remove('dark');
-//             urlLayer = lightLayer;
-//         }else{
-//             event.target.value = darkIcon;
-//             event.target.classList.add('dark');
-//             urlLayer = darkLayer;
-//         }
-//         darkMode = !darkMode;
-//     }
-//     container.classList.add('btnThemeControl')
-//     return container;
-// };
-// btnThemeControl.addTo(map);
-
+//Añadir Boton Modo Tema
+let btnThemeControl = L.control();
+btnThemeControl.onAdd = function (map) {
+    let container = L.DomUtil.create('input');
+    container.type = "button";
+    container.value = btnIcon;
+    container.title = "Modo Vista";
+    //Funcion cuando hagan click en el boton de toggle Mode
+    container.onclick = function (event) {
+        toggleThemeMode();
+        //Cambiar Boton, Clase y Filtro de Mapa
+        if(getThemeMode() == 'light'){
+            event.target.value = lightIcon;
+            event.target.classList.remove('dark');
+            mapTileLayer.updateFilter(filterLight);
+        }else{
+            event.target.value = darkIcon;
+            mapTileLayer.updateFilter(filterDark);
+            event.target.classList.add('dark');
+        }
+    }
+    container.classList.add('btnThemeControl')
+    return container;
+};
+btnThemeControl.addTo(map);
+//Funcion para traer los datos de un API
 async function getData() {
     const response = await fetch('https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/latest')
     const data = await response.json()
     return data
 }
+//Función renderizar datos
 function renderExtraData({ confirmed, deaths, recovered, provincestate, countryregion }) {
     return (`
         <div>
@@ -99,20 +113,19 @@ function renderExtraData({ confirmed, deaths, recovered, provincestate, countryr
         </div>
       `)
 }
-//Añador Titulo
+//Añador Titulo Información
 var info = L.control({position:'bottomcenter'});
 info.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+    this._div = L.DomUtil.create('div', 'info');
     this.update();
     return this._div;
 };
-// method that we will use to update the control based on feature properties passed
 info.update = function (props) {
-    this._div.innerHTML = '<h4>Mapa Coronavirus</h4>' + '<span>Numero de Casos Confirmados</span>';
+    this._div.innerHTML = '<h4>Mapa Coronavirus</h4>' + '<span>Numero de Casos</span>';
 };
-
 info.addTo(map);
-//Añadir Marcadores
+
+//Crear Icono
 const iconUrl = './icon.png';
 const shadowIcon = './marker-shadow.png';
 const icon = new L.Icon({
@@ -123,27 +136,17 @@ const icon = new L.Icon({
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
 });
-// const popup = new window.google.maps.InfoWindow()
+//Añadir Marcadores
 async function renderData() {
     const data = await getData();
-    let markersGroup = [];
+    // let markersGroup = [];
     data.forEach((item, index) => {
         const marker = L.marker([item.location.lat, item.location.lng], { icon: icon })
         // .addTo(map)
         .bindPopup(renderExtraData(item))
-        .addTo(markersGroupLayer);
-        //     marker.openPopup();
-        // }
-        // markersGroup.push(marker);
+        .addTo(map);
     });
-    // markersGroupLayer =  L.layerGroup(markersGroup);
-    map.addLayer(markersGroupLayer);
-    const overlayMarkers = {
-        "Personas": markersGroupLayer
-    };
-    L.control.layers(baseLayers, overlayMarkers, {
-        collapsed: false
-    }).addTo(map);
 }
 
+//Ejecutar la función Inicial
 renderData()

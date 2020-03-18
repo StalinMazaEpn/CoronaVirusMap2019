@@ -1,43 +1,56 @@
 body {
-    margin: 0;
-  }
-  .map {
-    width: 100vw;
-    height: 100vh;
-  }
+  margin: 0;
+}
+.map {
+  width: 100vw;
+  height: 100vh;
+}
 
-  .info {
-    padding: 6px 8px;
-    font: 14px/16px Arial, Helvetica, sans-serif;
-    
-    /* background: white; */
-    background: #22303a;
-    /* background: #d89e34fa; */
-    /* background: rgba(255,255,255,0.8); */
-    box-shadow: 0 0 15px rgba(0,0,0,0.2);
-    border-radius: 5px;
-    padding: 12px 10px;
-    text-align: center;
+.info {
+  padding: 6px 8px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+
+  /* background: white; */
+  background: #22303a;
+  /* background: #d89e34fa; */
+  /* background: rgba(255,255,255,0.8); */
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  padding: 12px 10px;
+  text-align: center;
 }
 .info h4 {
-    margin: 0 0 5px;
-    font-weight: bold;
-    color: white;
+  margin: 0 0 5px;
+  font-weight: bold;
+  color: white;
 }
-.info span{
-    color: #66d1ff;
+.info span {
+  color: #66d1ff;
 }
-.btnThemeControl{
-    padding: 8px;
-    background: white;
+.btnThemeControl {
+  padding: 8px;
+  font-size: 24px;
+  background: white;
+  outline: none !important;
+  border: none !important;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
 }
-.btnThemeControl.dark{
-    background: #383434;
+.btnThemeControl:focus {
+  outline: none !important;
+}
+.btnThemeControl::-moz-focus-inner {
+  border: 0 !important;
+}
+.btnThemeControl.dark {
+  background: #383434;
 }
 .leaflet-center {
-    left: 50%;
-    transform: translate(-50%, 0%);
-    margin: 1em;
+  left: 50%;
+  transform: translate(-50%, 0%);
+  margin: 1em;
 }
 /* createCorner("top", "center"), in leaflet.src */
 /* createCorner("bottom", "center") */
