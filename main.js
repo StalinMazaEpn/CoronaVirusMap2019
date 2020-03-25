@@ -98,12 +98,13 @@ btnThemeControl.onAdd = function (map) {
 btnThemeControl.addTo(map);
 //Funcion para traer los datos de un API
 async function getData() {
-    const response = await fetch('https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/latest')
+    //const response = await fetch('https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/latest')
+    const response = await fetch('https://covid19.mathdro.id/api/confirmed')
     const data = await response.json()
     return data
 }
 //Función renderizar datos
-function renderExtraData({ confirmed, deaths, recovered, provincestate, countryregion }) {
+function renderExtraData({ confirmed, deaths, recovered, provinceState, countryRegion }) {
     return (`
         <div>
           <p> <strong>${provincestate} - ${countryregion}</strong> </p>
@@ -141,7 +142,8 @@ async function renderData() {
     const data = await getData();
     // let markersGroup = [];
     data.forEach((item, index) => {
-        const marker = L.marker([item.location.lat, item.location.lng], { icon: icon })
+        //const marker = L.marker([item.location.lat, item.location.lng], { icon: icon })
+        const marker = L.marker([item.lat, item.lng], { icon: icon })
         // .addTo(map)
         .bindPopup(renderExtraData(item))
         .addTo(map);
