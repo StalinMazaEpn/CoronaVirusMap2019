@@ -10,7 +10,6 @@ let leafletAtribution = '&copy; <a href="https://www.openstreetmap.org/copyright
 //Funciones Manejar Temas
 const getThemeMode = () =>{
     const mode = localStorage.getItem('sm-mode-theme');
-    console.log('get theme mode value', mode)
     if(!mode){
         return 'light'
     }else{
@@ -105,9 +104,10 @@ async function getData() {
 }
 //Función renderizar datos
 function renderExtraData({ confirmed, deaths, recovered, provinceState, countryRegion }) {
+    const mensaje = (provinceState) ? `${countryRegion} - ${provinceState}` : `${countryRegion};
     return (`
         <div>
-          <p> <strong>${provinceState} - ${countryRegion}</strong> </p>
+          <p> <strong>${mensaje}</strong> </p>
           <p> Confirmados: ${confirmed} </p>
           <p> Muertes: ${deaths} </p>
           <p> Recuperados: ${recovered} </p>
