@@ -104,7 +104,7 @@ async function getData() {
 }
 //Función renderizar datos
 function renderExtraData({ confirmed, deaths, recovered, provinceState, countryRegion }) {
-    const mensaje = (provinceState) ? `${countryRegion} - ${provinceState}` : `${countryRegion};
+    const mensaje = (provinceState) ? `${countryRegion} - ${provinceState}` : `${countryRegion}`;
     return (`
         <div>
           <p> <strong>${mensaje}</strong> </p>
