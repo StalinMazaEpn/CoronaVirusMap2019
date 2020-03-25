@@ -107,7 +107,7 @@ async function getData() {
 function renderExtraData({ confirmed, deaths, recovered, provinceState, countryRegion }) {
     return (`
         <div>
-          <p> <strong>${provincestate} - ${countryregion}</strong> </p>
+          <p> <strong>${provinceState} - ${countryRegion}</strong> </p>
           <p> Confirmados: ${confirmed} </p>
           <p> Muertes: ${deaths} </p>
           <p> Recuperados: ${recovered} </p>
