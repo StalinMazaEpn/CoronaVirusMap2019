@@ -143,7 +143,7 @@ async function renderData() {
     // let markersGroup = [];
     data.forEach((item, index) => {
         //const marker = L.marker([item.location.lat, item.location.lng], { icon: icon })
-        const marker = L.marker([item.lat, item.lng], { icon: icon })
+        const marker = L.marker([item.lat, item.long], { icon: icon })
         // .addTo(map)
         .bindPopup(renderExtraData(item))
         .addTo(map);
