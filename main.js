@@ -1,11 +1,13 @@
-let lightLayer = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+// let lightLayer = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+let lightLayer = 'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}';
 let darkIcon = '🌛';
 let lightIcon = '☀️';
 let filterDark = ['invert:100%'];
 let filterLight = [];
 let currentFilter = [];
 let btnIcon = lightIcon;
-let leafletAtribution = '&copy; <a href="https://www.openstreetmap.org/copyright">Gracias a OpenStreetMap</a>';
+let leafletAtribution = '&copy; <a target=_blank" href="https://www.google.com/intl/es-419_ec/help/terms_maps/">Google Maps</a>';
+// let leafletAtribution = '&copy; <a href="https://www.openstreetmap.org/copyright">Gracias a OpenStreetMap</a>';
 
 //Funciones Manejar Temas
 const getThemeMode = () =>{
