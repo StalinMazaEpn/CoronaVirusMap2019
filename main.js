@@ -8,7 +8,6 @@ let currentFilter = [];
 let btnIcon = lightIcon;
 let leafletAtribution = '&copy; <a target=_blank" href="https://www.google.com/intl/es-419_ec/help/terms_maps/">Google Maps</a>';
 // let leafletAtribution = '&copy; <a href="https://www.openstreetmap.org/copyright">Gracias a OpenStreetMap</a>';
-
 //Funciones Manejar Temas
 const getThemeMode = () =>{
     const mode = localStorage.getItem('sm-mode-theme');
@@ -124,7 +123,7 @@ info.onAdd = function (map) {
     return this._div;
 };
 info.update = function (props) {
-    this._div.innerHTML = '<h4>Mapa Coronavirus</h4>' + '<span>Numero de Casos</span>';
+    this._div.innerHTML = '<h4>Mapa Coronavirus</h4>' + '<span>A Nivel Mundial</span>';
 };
 info.addTo(map);
 

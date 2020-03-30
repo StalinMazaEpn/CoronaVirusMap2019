@@ -52,5 +52,3 @@ body {
   transform: translate(-50%, 0%);
   margin: 1em;
 }
-/* createCorner("top", "center"), in leaflet.src */
-/* createCorner("bottom", "center") */
