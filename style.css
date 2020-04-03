@@ -1,5 +1,12 @@
+:root{
+  --lightBlue: #66d1ff;
+}
+
+
 body {
   margin: 0;
+  font-size: 14px;
+  position: relative;
 }
 .map {
   width: 100vw;
@@ -51,4 +58,42 @@ body {
   left: 50%;
   transform: translate(-50%, 0%);
   margin: 1em;
+}
+
+.info-estadisticas{
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  height: auto;
+  left: 0;
+  background: #22303a;
+  color: white;
+  z-index: 1000;
+}
+
+.info-estadisticas .content-info{
+  display: flex;
+  padding: 1em;
+  justify-content: space-around;
+}
+
+.info-estadisticas .header-info{
+  text-align: center;
+  color: var(--lightBlue);
+  padding: .4em 1em;
+  font-size: 1.2em;
+}
+
+.info-estadisticas .content-info .estadistica{
+  text-align: center;
+  font-size: 1em;
+}
+
+.info-estadisticas .content-info .estadistica span{
+  display: block;
+  margin-bottom: .6em;
+}
+.info-estadisticas .content-info .estadistica span.icon{
+  font-size: 1.2em;
+  margin-bottom: .75em;
 }

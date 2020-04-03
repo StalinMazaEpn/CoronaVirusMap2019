@@ -1,4 +1,58 @@
 // let lightLayer = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+let icons = {
+    users: 'fa fa-users',
+    user: 'fa fa-user',
+    frown: 'fa fa-frown-o',
+    heartbeat: 'fa fa-heartbeat',
+    medkit: 'fa fa-medkit',
+    ambulance: 'fa fa-ambulance',
+    check: 'fa fa-check-square',
+    exclamation: 'fa fa-exclamation-triangle',
+    question: 'fa fa-question-circle',
+    termometer: 'fa fa-thermometer-full',
+    times: 'fa fa-times',
+    default: ''
+};
+function getEstadisticasIcon(property){
+    let icon;
+    switch(property){
+        case 'estables_aislamiento_domiciliario':
+            icon = icons.users;
+            break;
+        case 'hospitalizados_estables':
+            icon = icons.termometer;
+            break;
+        case 'hospitalizados_pronostico_reservado':
+            icon = icons.ambulance;
+            break;
+        case 'confirmados':
+            icon = icons.check;
+            break;
+        case 'fallecidos':
+            icon = icons.frown;
+            break;
+        case 'sospechosos':
+            icon = icons.question;
+            break;
+        case 'descartados':
+            icon = icons.times;
+            break;
+        case 'recuperados':
+            icon = icons.medkit;
+            break;
+        case 'muestras_tomadas':
+            icon = icons.users;
+            break;
+        case 'fecha_corte':
+            icon = icons.users;
+            break;
+        default:
+            icon = icons.default;
+            break;
+            
+    }
+    return icon;
+}
 let lightLayer = 'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}';
 let darkIcon = '🌛';
 let lightIcon = '☀️';
@@ -50,7 +104,7 @@ var map = L.map('map', {
     zoomAnimation: false,
     markerZoomAnimation: false,
     zoomControl: true,
-}).setView([0, 0], 3);
+}).setView([-1.93322683, -78.70605469], 3);
 //Añadirle una capa
 let mapTileLayer = L.tileLayer.colorFilter(lightLayer, {
     attribution: leafletAtribution,
@@ -63,13 +117,6 @@ let mapTileLayer = L.tileLayer.colorFilter(lightLayer, {
 // Añadir boton FullScreen
 var fsControl = L.control.fullscreen();
 map.addControl(fsControl);
-// Manejar Eventos al Salir y entrar del modo pantalla completa
-// map.on('enterFullscreen', function(){
-//     if(window.console) window.console.log('enterFullscreen');
-// });
-// map.on('exitFullscreen', function(){
-//     if(window.console) window.console.log('exitFullscreen');
-// });
 
 //Añadir Boton Modo Tema
 let btnThemeControl = L.control();
@@ -116,16 +163,16 @@ function renderExtraData({ confirmed, deaths, recovered, provinceState, countryR
       `)
 }
 //Añador Titulo Información
-var info = L.control({position:'bottomcenter'});
-info.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'info');
-    this.update();
-    return this._div;
-};
-info.update = function (props) {
-    this._div.innerHTML = '<h4>Mapa Coronavirus</h4>' + '<span>A Nivel Mundial</span>';
-};
-info.addTo(map);
+// var info = L.control({position:'bottomcenter'});
+// info.onAdd = function (map) {
+//     this._div = L.DomUtil.create('div', 'info');
+//     this.update();
+//     return this._div;
+// };
+// info.update = function (props) {
+//     this._div.innerHTML = '<h4>Mapa Coronavirus</h4>' + '<span>A Nivel Mundial</span>';
+// };
+// info.addTo(map);
 
 //Crear Icono
 const iconUrl = './icon.png';
@@ -141,14 +188,57 @@ const icon = new L.Icon({
 //Añadir Marcadores
 async function renderData() {
     const data = await getData();
-    // let markersGroup = [];
-    data.forEach((item, index) => {
-        //const marker = L.marker([item.location.lat, item.location.lng], { icon: icon })
-        const marker = L.marker([item.lat, item.long], { icon: icon })
-        // .addTo(map)
-        .bindPopup(renderExtraData(item))
-        .addTo(map);
-    });
+    // console.log('data', data);
+    let confirmed = 0;
+    let deaths = 0;
+    let recovered = 0;
+    for (const item of data) {
+        confirmed += item.confirmed;
+        deaths += item.deaths;
+        recovered += item.recovered;
+        if(item.lat && item.long){
+            const marker = L.marker([item.lat, item.long], { icon: icon })
+            .bindPopup(renderExtraData(item))
+            .addTo(map);
+        }
+    }
+    drawEstadistics({recovered, deaths, confirmed});
+}
+
+function drawEstadistics({recovered, deaths, confirmed}){
+    const seccionEstadisticasContent = document.querySelector('.info-estadisticas .content-info');
+    // let seccionFragmento = document.createDocumentFragment();
+    // const icon = getEstadisticasIcon(prop);
+    // let articulo = document.createElement("article");
+    const check = 'fa fa-check-square';
+    const medkit = 'fa fa-medkit';
+    const frown = 'fa fa-frown-o';
+
+    const htmlArticulo = `
+    <article class="estadistica">
+        <span class="icon">
+            <i class="${check}" aria-hidden="true"></i>
+        </span>
+        <span>Confirmados</span>
+        <span>${confirmed}</span>
+    </article>
+    <article class="estadistica">
+        <span class="icon">
+            <i class="${frown}" aria-hidden="true"></i>
+        </span>
+        <span>Fallecidos</span>
+        <span>${deaths}</span>
+    </article>
+    <article class="estadistica">
+        <span class="icon">
+            <i class="${medkit}" aria-hidden="true"></i>
+        </span>
+        <span>Recuperados</span>
+        <span>${recovered}</span>
+    </article>
+    `;
+    seccionEstadisticasContent.innerHTML = htmlArticulo;
+    // articleFragmento.appendChild(articulo);
 }
 
 //Ejecutar la función Inicial
