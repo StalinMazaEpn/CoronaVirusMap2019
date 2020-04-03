@@ -1,5 +1,7 @@
 :root{
   --lightBlue: #66d1ff;
+  --font-responsive: calc(16px + 0.4vw);
+  --font-title-responsive: calc(16px + 0.8vw);
 }
 
 
@@ -81,12 +83,14 @@ body {
   text-align: center;
   color: var(--lightBlue);
   padding: .4em 1em;
-  font-size: 1.2em;
+  /* font-size: 1.2em; */
+  font-size: var(--font-title-responsive);
 }
 
 .info-estadisticas .content-info .estadistica{
   text-align: center;
-  font-size: 1em;
+  /* font-size: 1em; */
+  font-size: var(--font-responsive);
 }
 
 .info-estadisticas .content-info .estadistica span{
