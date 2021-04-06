@@ -19,10 +19,10 @@ live-server
 ### Imágenes
 
 **Versión Móvil**
-![Móvil](./MapaCoronavirus.png)
+![Móvil](./img/MapaCoronavirus.png)
 
 **Versión Web**
-![Móvil](./MapaCoronavirusWeb.png)
+![Móvil](./img/MapaCoronavirusWeb.png)
 
 **Versión Web**
 

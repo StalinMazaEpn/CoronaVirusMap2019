@@ -3,19 +3,27 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Sitio web informativo con las estadisticas de la pandemia del covid19 alrededor del mundo, desarrollado por Stalin Maza">
+    <meta name="keywords" content="software, development, responsive, websites">
     <title>COVID 19</title>
     <!-- Leaflet Core -->
     <link rel="stylesheet" href="./assets/leaflet-core/leaflet.css" />
-    <script src="./assets/leaflet-core/leaflet-src.js"></script>
+    <!-- <script src="./assets/leaflet-core/leaflet-src.js"></script> -->
     <!-- FullScreen -->
     <link rel="stylesheet" href="./assets/leaflet-fullscreen/Control.FullScreen.css" />
-    <script src="./assets/leaflet-fullscreen/Control.FullScreen.js"></script>
+    <!-- <script src="./assets/leaflet-fullscreen/Control.FullScreen.js"></script> -->
     <!-- Own Styles -->
-    <link rel="stylesheet" href="style.css">
-    <script src="./assets/leaflet.edgebuffer.js"></script>
-    <script src="./assets//leaflet-tilelayer-colorfilter.min.js"></script>
+    <link rel="preload" href="style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet" href="style.css">
+    </noscript>
+    <!-- <script src="./assets/leaflet.edgebuffer.js"></script> -->
+    <!-- <script src="./assets//leaflet-tilelayer-colorfilter.min.js"></script> -->
     <link rel="shortcut icon" href="favicon.png" type="image/png">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 </head>
@@ -29,7 +37,27 @@
         <div class="content-info">
         </div>
     </div>
-    <script type="module" src="main.js"></script>
+    <!-- Leaflet Core -->
+    <script defer src="./assets/leaflet-core/leaflet-src.js"></script>
+    <!-- FullScreen -->
+    <script defer src="./assets/leaflet-fullscreen/Control.FullScreen.js"></script>
+    <!-- Own Scripts -->
+    <script defer src="./assets/leaflet.edgebuffer.js"></script>
+    <script defer src="./assets/leaflet-tilelayer-colorfilter.min.js"></script>
+    <script defer type="module" src="main.js"></script>
+    <script>
+        // new PerformanceObserver((entryList) => {
+        //     for (const entry of entryList.getEntries()) {
+        //         console.log('LCP candidate:', entry.startTime, entry);
+        //     }
+        // }).observe({ type: 'largest-contentful-paint', buffered: true });
+
+        // new PerformanceObserver((entryList) => {
+        //     for (const entry of entryList.getEntries()) {
+        //         console.log('Paint candidate:', entry.startTime, entry);
+        //     }
+        // }).observe({ type: 'paint', buffered: true });
+    </script>
 </body>
 
 </html>

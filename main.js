@@ -1,4 +1,3 @@
-// let lightLayer = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 let icons = {
     users: 'fa fa-users',
     user: 'fa fa-user',
@@ -13,9 +12,10 @@ let icons = {
     times: 'fa fa-times',
     default: ''
 };
-function getEstadisticasIcon(property){
+
+function getEstadisticasIcon(property) {
     let icon;
-    switch(property){
+    switch (property) {
         case 'estables_aislamiento_domiciliario':
             icon = icons.users;
             break;
@@ -49,10 +49,11 @@ function getEstadisticasIcon(property){
         default:
             icon = icons.default;
             break;
-            
+
     }
     return icon;
 }
+
 let lightLayer = 'https://mt1.google.com/vt/lyrs=r&x={x}&y={y}&z={z}';
 let darkIcon = '🌛';
 let lightIcon = '☀️';
@@ -61,13 +62,13 @@ let filterLight = [];
 let currentFilter = [];
 let btnIcon = lightIcon;
 let leafletAtribution = '&copy; <a target=_blank" href="https://www.google.com/intl/es-419_ec/help/terms_maps/">Google Maps</a>';
-// let leafletAtribution = '&copy; <a href="https://www.openstreetmap.org/copyright">Gracias a OpenStreetMap</a>';
+
 //Funciones Manejar Temas
-const getThemeMode = () =>{
+const getThemeMode = () => {
     const mode = localStorage.getItem('sm-mode-theme');
-    if(!mode){
+    if (!mode) {
         return 'light'
-    }else{
+    } else {
         return mode;
     }
 }
@@ -77,9 +78,9 @@ const setThemeMode = (mode) => {
 
 const toggleThemeMode = () => {
     const mode = getThemeMode();
-    if(mode == 'light'){
+    if (mode == 'light') {
         setThemeMode('dark');
-    }else{
+    } else {
         setThemeMode('light');
     }
 }
@@ -90,14 +91,11 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
     localStorage.setItem('sm-mode-theme', 'dark');
 }
 
-if(localStorage.getItem("sm-mode-theme") == null){
+if (localStorage.getItem("sm-mode-theme") == null) {
     localStorage.setItem('sm-mode-theme', 'light');
 }
 
-
-currentFilter = (getThemeMode() == 'light') ? filterLight: filterDark;
-
-
+currentFilter = (getThemeMode() == 'light') ? filterLight : filterDark;
 
 //Crear Mapa
 var map = L.map('map', {
@@ -105,14 +103,15 @@ var map = L.map('map', {
     markerZoomAnimation: false,
     zoomControl: true,
 }).setView([-1.93322683, -78.70605469], 3);
+
 //Añadirle una capa
-let mapTileLayer = L.tileLayer.colorFilter(lightLayer, {
+const mapTileLayer = L.tileLayer.colorFilter(lightLayer, {
     attribution: leafletAtribution,
     updateWhenIdle: true,
     reuseTiles: true,
     filter: currentFilter,
 }).addTo(map);
-
+const myRenderer = L.canvas({ padding: 0.5 });
 
 // Añadir boton FullScreen
 var fsControl = L.control.fullscreen();
@@ -129,11 +128,11 @@ btnThemeControl.onAdd = function (map) {
     container.onclick = function (event) {
         toggleThemeMode();
         //Cambiar Boton, Clase y Filtro de Mapa
-        if(getThemeMode() == 'light'){
+        if (getThemeMode() == 'light') {
             event.target.value = lightIcon;
             event.target.classList.remove('dark');
             mapTileLayer.updateFilter(filterLight);
-        }else{
+        } else {
             event.target.value = darkIcon;
             mapTileLayer.updateFilter(filterDark);
             event.target.classList.add('dark');
@@ -146,7 +145,11 @@ btnThemeControl.addTo(map);
 //Funcion para traer los datos de un API
 async function getData() {
     //const response = await fetch('https://wuhan-coronavirus-api.laeyoung.endpoint.ainize.ai/jhu-edu/latest')
-    const response = await fetch('https://covid19.mathdro.id/api/confirmed')
+    const response = await fetch('https://covid19.mathdro.id/api/confirmed', {
+        method: 'GET',
+        mode: "cors",
+        cache: "default"
+    })
     const data = await response.json()
     return data
 }
@@ -155,6 +158,9 @@ function renderExtraData({ confirmed, deaths, recovered, provinceState, countryR
     const mensaje = (provinceState) ? `${countryRegion} - ${provinceState}` : `${countryRegion}`;
     return (`
         <div>
+          <div class="leaflet-icon">
+            <img src="./img/icon.png" />
+          </div>
           <p> <strong>${mensaje}</strong> </p>
           <p> Confirmados: ${confirmed} </p>
           <p> Muertes: ${deaths} </p>
@@ -162,21 +168,9 @@ function renderExtraData({ confirmed, deaths, recovered, provinceState, countryR
         </div>
       `)
 }
-//Añador Titulo Información
-// var info = L.control({position:'bottomcenter'});
-// info.onAdd = function (map) {
-//     this._div = L.DomUtil.create('div', 'info');
-//     this.update();
-//     return this._div;
-// };
-// info.update = function (props) {
-//     this._div.innerHTML = '<h4>Mapa Coronavirus</h4>' + '<span>A Nivel Mundial</span>';
-// };
-// info.addTo(map);
-
 //Crear Icono
-const iconUrl = './icon.png';
-const shadowIcon = './marker-shadow.png';
+const iconUrl = './img/icon.png';
+const shadowIcon = './img/marker-shadow.png';
 const icon = new L.Icon({
     iconUrl: iconUrl,
     shadowUrl: shadowIcon,
@@ -188,7 +182,6 @@ const icon = new L.Icon({
 //Añadir Marcadores
 async function renderData() {
     const data = await getData();
-    // console.log('data', data);
     let confirmed = 0;
     let deaths = 0;
     let recovered = 0;
@@ -196,20 +189,21 @@ async function renderData() {
         confirmed += item.confirmed;
         deaths += item.deaths;
         recovered += item.recovered;
-        if(item.lat && item.long){
-            const marker = L.marker([item.lat, item.long], { icon: icon })
-            .bindPopup(renderExtraData(item))
-            .addTo(map);
+        if (item.lat && item.long) {
+            // L.marker([item.lat, item.long], { icon: icon })
+            L.circleMarker([item.lat, item.long], {
+                renderer: myRenderer,
+                color: '#800000'
+            }).addTo(map)
+                .bindPopup(renderExtraData(item))
+                .addTo(map);
         }
     }
-    drawEstadistics({recovered, deaths, confirmed});
+    drawEstadistics({ recovered, deaths, confirmed });
 }
 
-function drawEstadistics({recovered, deaths, confirmed}){
+function drawEstadistics({ recovered, deaths, confirmed }) {
     const seccionEstadisticasContent = document.querySelector('.info-estadisticas .content-info');
-    // let seccionFragmento = document.createDocumentFragment();
-    // const icon = getEstadisticasIcon(prop);
-    // let articulo = document.createElement("article");
     const check = 'fa fa-check-square';
     const medkit = 'fa fa-medkit';
     const frown = 'fa fa-frown-o';

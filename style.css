@@ -9,10 +9,22 @@ body {
   margin: 0;
   font-size: 14px;
   position: relative;
+  font-display: swap;
 }
 .map {
   width: 100vw;
   height: 100vh;
+}
+
+.leaflet-icon{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.leaflet-icon img{
+  width: 30px;
+  height: 30px;
+  object-fit: cover;
 }
 
 .info {
